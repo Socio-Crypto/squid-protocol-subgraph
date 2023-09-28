@@ -5,6 +5,14 @@ type AddressStat @entity {
   sourceChain: String!
   destinationChain: String!
   volume: BigInt!
+  noSwaps: Int!
+}
+
+type NoUsersByDestinationChain @entity {
+  id: ID!
+  symbol: String!
+  destinationChain: String!
+  noUsers: Int!
 }
 
 type AddressStatByDate @entity {
@@ -15,8 +23,8 @@ type AddressStatByDate @entity {
   sourceChain: String!
   destinationChain: String!
   volume: BigInt!
+  noSwaps: Int!
 }
-
 
 type TokenStat @entity {
   id: ID!
@@ -24,6 +32,12 @@ type TokenStat @entity {
   sourceChain: String!
   destinationChain: String!
   volume: BigInt!
+  noSwaps: Int!
+}
+
+type TokenStatByDateUsers @entity {
+  id: ID!
+  token: TokenStatByDate!
 }
 
 type TokenStatByDate @entity {
@@ -33,6 +47,25 @@ type TokenStatByDate @entity {
   sourceChain: String!
   destinationChain: String!
   volume: BigInt!
+  noSwaps: Int!
+  noSwappers: Int!
+  user_addresses: [TokenStatByDateUsers!]! @derivedFrom(field: "token")
+}
+
+type TokenStatUsers @entity {
+  id: ID!
+  tokenstatgroupbydate: TokenStatGroupByDate!
+}
+
+type TokenStatGroupByDate @entity {
+  id: ID!
+  date: String!
+  symbol: String!
+  volume: BigInt!
+  avg_volume: BigInt!
+  noSwaps: Int!
+  noSwappers: Int!
+  user_addresses: [TokenStatUsers!]! @derivedFrom(field: "tokenstatgroupbydate")
 }
 
 type TokenStatByMonth @entity {
@@ -42,4 +75,38 @@ type TokenStatByMonth @entity {
   sourceChain: String!
   destinationChain: String!
   volume: BigInt!
+  noSwaps: Int!
+  noSwappers: Int!
+  user_addresses: [String!]!
+}
+
+type UserAddresses @entity {
+  id: ID!
+  user_address: String!
+  source_chain: SourceChain! 
+}
+
+type SourceChain @entity {
+  id: ID!
+  volume: BigInt!
+  symbol: String!
+  noSwaps: Int!
+  user_addresses: [UserAddresses!]! @derivedFrom(field: "source_chain")
+  noSwappers: Int!
+}
+
+type DestinationUsers @entity {
+  id: ID!
+  destination_chain: DestinationChain!
+}
+
+type DestinationChain @entity {
+  id: ID!
+  destinationChain: String!
+  volume: BigInt!
+  avg_volume: BigInt!
+  noSwaps: Int!
+  symbol: String!
+  user_addresses: [DestinationUsers!]! @derivedFrom(field: "destination_chain")
+  noSwappers: Int!
 }
